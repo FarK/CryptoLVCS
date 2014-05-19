@@ -45,6 +45,25 @@ def addtext(text, image, cols, font_size = 16):
 
     return image
 
+def overlaping(img1, img2, channel=0, thresold=125):
+    white = (255,255,255)
+    black = (0,0,0)
+    data1 = img1.getdata()
+    data2 = img2.getdata()
+    #data = [filter(lambda x: x in data1, sublist) for sublist in data2]
+
+    newData = []
+    for (p1,p2) in zip(data1,data2):
+        if p1[channel] < thresold or p2[channel] < thresold:
+            newData.append(black)
+        else:
+            newData.append(white)
+
+    result = Image.new("RGB", img1.size, white)
+    result.putdata(newData)
+
+    return result
+
 
 def createimage(rows, cols, font_size = 16):
     # use a (r, g, b) tuple to represent colors
