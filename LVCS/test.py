@@ -40,7 +40,7 @@ for p in  per:
 #print_matrix (get_B_3n(3)[0])
 #print_matrix (get_B_3n(3)[1])
 
-img = Image.open('li.png')
+img = Image.open('resources/images/li.png')
 (w,h) = img.size
 
 
@@ -50,13 +50,13 @@ print len(shades[0])
 print h
 wr =  int(w*3)
 img1 = addtext(shades[0], None, w, rows = h)
-img1.save('shade1.png', 'PNG')
+img1.save('resources/results/shade1.png', 'PNG')
 img2 = addtext(shades[1], None, w, rows = h)
-img2.save('shade2.png', 'PNG')
+img2.save('resources/results/shade2.png', 'PNG')
 result = overlaping(img1,img2)
 img3 = addtext(shades[2], None, w, rows = h)
-img3.save('shade3.png', 'PNG')
+img3.save('resources/results/shade3.png', 'PNG')
 result = overlaping(result,img3)
 
-overlaping(img1,img3).save('subresult.png', 'PNG')
-result.save('result.png', 'PNG')
+overlaping(img1,img3).save('resources/results/subresult.png', 'PNG')
+result.save('resources/results/result.png', 'PNG')
