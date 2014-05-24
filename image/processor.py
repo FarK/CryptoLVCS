@@ -4,7 +4,7 @@ from PIL import ImageFont
 from PIL import ImageDraw
 
 
-def addtext(text, image, cols, font_size = 11, rows = None):
+def addtext(text, image, cols, font_size = 8, rows = None):
     red = (255,0,0,255)
     green = (0,255,0,255)
     blue = (0,0,255,255)
@@ -17,7 +17,7 @@ def addtext(text, image, cols, font_size = 11, rows = None):
     font = ImageFont.truetype("DejaVuSans.ttf", font_size)
 
     #reduce space between letters
-    font_size -= int(font_size * 0.2)
+    font_size -= int(font_size * 0.3)
 
 
     if image is None:

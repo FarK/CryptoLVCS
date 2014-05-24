@@ -47,6 +47,26 @@ def get_B_22():
              [False, True]],
             )
 
+def get_B_33():
+    return ([[False, True, False, True, False, False],
+             [True, True, False, True, False, True],
+             [True, False, False, True, False, True]],
+            [[True, True, False, False, False, False],
+             [False, False, True, True, False, False],
+             [False, False, False, False, True, True]]
+            )
+
+#difference factor 3
+'''
+def get_B_33():
+    return ([[False, True, True, True, True, False, False, True, False],
+             [False, True, True, True, False, False, True, False, False],
+             [False, True, True, True, False, False, False, True, False]],
+             [[False, True, True, True, True, False, True, False, False],
+              [True, False, False, False, False,True, False, True, True],
+              [False, False, True, True, True, False, True, False, False],]
+            )
+'''
 # Source: Criptografía Visual Basada en el Esquema de Umbral (2010)
 # Mariko Nakano, Enrique Escamilla, Hector Perez, Mitsugu Iwamoto
 def get_B_3n(n):
@@ -84,7 +104,6 @@ def get_B_3n(n):
 
 
     return [B0,B1]
-
 
 
 
@@ -180,9 +199,51 @@ def print_letter_matrix(matrix):
     print '-' * (len(matrix[0]) +2)
 
 
+def get_random_matrix(n,m):
+
+    result = []
+    for r in range(0,n):
+        row = []
+        for c in range(0,m):
+            row.append(random.choice([True, False]))
+
+        result.append(row)
+
+    return result
+
+
+def get_diff_factor(b0,b1, k):
+    h0 = h_(or_(b0,k))
+    h1 = h_(or_(b1,k))
+
+    r = []
+    for (v0,v1) in zip(h0,h1):
+        r.append(v1-v0)
+
+    return r
+
+def validate(b0, b1, k):
+    h0 = h_(or_(b0,k))
+    h1 = h_(or_(b1,k))
+
+    if h0 >= h1:
+        #print '%s >= %s'%(h0,h1)
+        return False
+
+    for r in range(2,k):
+        h0 = h_(or_(b0,r))
+        h1 = h_(or_(b1,r))
+        if h0 != h1:
+            #print '%s != %s'%(h0,h1)
+            return False
+
+    return True
+
+
+
 # realiza la operacion or sobre todas las permutaciones
 # de r filas
-def or_operator(matrix, r):
+def or_(matrix, r):
     per = itertools.permutations(matrix,r)
 
     #return per
@@ -204,7 +265,7 @@ def or_operator(matrix, r):
 
 # calcula la distancia de hamming sobre
 # cada una de la finas
-def h_operator(matrix):
+def h_(matrix):
 
     result = []
     for r in matrix:
@@ -259,15 +320,24 @@ def transpose(matrix):
     return [list(x) for x in zip(*matrix)]
 
 def create_L(b):
-    letters = string.ascii_uppercase.replace('I',"")
+    bad_letters = "IJEFCOQL"
+    letters = string.ascii_uppercase
+
+    for bl in bad_letters:
+        letters = letters.replace(bl, "")
+
     r0 = []
     for i in range(0,len(b[0])):
-        r0.append(random.choice(letters))
+        l = random.choice(letters)
+        r0.append(l)
+        letters = letters.replace(l, "")
+
+    upper_case = [letters] * len(b[0])
 
     result = []
     #result.append(r0)
     ri = 0
-    upper_case = [letters] * len(b[0])
+
     #for (uc,ch) in zip(upper_case,r0):
     #    uc = uc.replace(ch,"")
 
@@ -297,7 +367,11 @@ def LVCS_DVCS(image, channel=0, thresold = 125, k=2, n=3):
         b0 = get_B_22()[0]
         b1 = get_B_22()[1]
 
-    if k == 3 and n > 2:
+    if k == 3 and n == 3:
+        b0 = get_B_33()[0]
+        b1 = get_B_33()[1]
+
+    elif k == 3 and n > 2:
         b0 = get_B_3n(n)[0]
         b1 = get_B_3n(n)[1]
 
@@ -333,10 +407,23 @@ def LVCS_DVCS(image, channel=0, thresold = 125, k=2, n=3):
         #transpose
         t = transpose( m )
 
+        '''
+        one = True if  p[channel] < thresold else False
+        if one:
+            for i in range(0,len(t[0])):
+                if t[0][i] == t[1][i] and \
+                   t[1][i] == t[2][i]:
+                       print 'oopsss1'
+                       print_matrix(b1)
+                       print_letter_matrix(l1)
+                       print_letter_matrix(t)
+        '''
         for i in range(0,len(result)):
             #print create_superpixel(t[i])
             #print t[i]
-            result[i].append( create_superpixel(t[i]) )
+            sp = create_superpixel(t[i])
+            result[i].append( sp )
+
 
             #result[i] = result[i] + t[i]
             #for c in t[i]:
@@ -349,8 +436,8 @@ def LVCS_DVCS(image, channel=0, thresold = 125, k=2, n=3):
 # Convert a vecto to a superpixel.
 # If vector is [A,B,D,E]
 # The result is:
-#     [[A,B],
-#     [D,E]]
+#     [ [A,B] ,
+#       [D,E] ]
 def create_superpixel(vector):
     if is_square(len(vector)):
         dim = (int(math.sqrt(int(len(vector)))))
@@ -358,6 +445,16 @@ def create_superpixel(vector):
         result = []
         for i in range(0,dim+1,dim):
             result.append(vector[i:i+dim])
+
+        return result
+
+    elif len(vector)%2 == 0:
+        rows = int(len(vector) / 2)
+        cols = len(vector) / rows
+
+        result = []
+        for i in range(0,len(vector), cols):
+            result.append(vector[i:i+cols])
 
         return result
 
