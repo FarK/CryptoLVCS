@@ -9,8 +9,8 @@ def addtext(text, image, cols, font_size = 8, rows = None):
     green = (0,255,0,255)
     blue = (0,0,255,255)
     black = (0,0,0,255)
-    colors = [red,green,blue,black]
-    if rows == None:
+
+    if rows is None:
         rows = int(len(text) / cols) + 1
 
     #load font
@@ -19,10 +19,11 @@ def addtext(text, image, cols, font_size = 8, rows = None):
     #reduce space between letters
     font_size -= int(font_size * 0.3)
 
-
     if image is None:
         # create image
-        image = createimage(rows*len(text[0]), cols*len(text[0][0]), font_size)
+        image = createimage(rows * len(text[0]),
+                            cols * len(text[0][0]),
+                            font_size)
 
     else:
         # check the size
@@ -43,18 +44,15 @@ def addtext(text, image, cols, font_size = 8, rows = None):
     draw = ImageDraw.Draw(image)
     index = 0
 
-    total = 0
-
     rf = 0
-    for r in range(0,rows):
+    for r in range(0, rows):
         cf = 0
-        for c in range(0,cols):
+        for c in range(0, cols):
             superpixel = text[index]
-            #print superpixel
+
             if len(superpixel[0]) > 1:
                 srf = 0
                 for rsp in superpixel:
-
 
                     for char in rsp:
                         draw.text((cf * (font_size),
@@ -62,19 +60,20 @@ def addtext(text, image, cols, font_size = 8, rows = None):
                                    char, fill=black, font=font)
 
                         cf += 1
+
                     srf += 1
                     cf -= len(rsp)
-                    total += 1
+
 
                 cf += len(superpixel[0])
 
             else:
-                draw.text((c * font_size, r * font_size),superpixel,black,font=font)
-
+                draw.text((c * font_size, r * font_size),
+                          superpixel, black, font=font)
 
             index = index + 1
-            #print index
-            if( index >= len(text) ):
+
+            if(index >= len(text)):
                 return image
 
         rf += len(text[0])

@@ -130,8 +130,8 @@ def get_B_33():
             )
 
 #difference factor 3
-'''
-def get_B_33():
+
+def get_B_33_m9():
     return ([[False, True, True, True, True, False, False, True, False],
              [False, True, True, True, False, False, True, False, False],
              [False, True, True, True, False, False, False, True, False]],
@@ -139,7 +139,7 @@ def get_B_33():
               [True, False, False, False, False,True, False, True, True],
               [False, False, True, True, True, False, True, False, False],]
             )
-'''
+
 # Source: Criptografía Visual Basada en el Esquema de Umbral (2010)
 # Mariko Nakano, Enrique Escamilla, Hector Perez, Mitsugu Iwamoto
 def get_B_3n(n):

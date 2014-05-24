@@ -1,6 +1,18 @@
 # -*- coding: utf-8 -*-
 import random
 
+def int_permutation(n):
+    result = [0]
+
+    for num in range(0, n):
+        i = random.randint(0, num)
+
+        result = result[0:i+1] + [num] + result[i + 1:]
+
+
+    return result[1:]
+
+
 def is_square(apositiveint):
   x = apositiveint // 2
   seen = set([x])

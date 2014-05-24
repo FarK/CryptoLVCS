@@ -44,7 +44,7 @@ img = Image.open('resources/images/li.png')
 (w,h) = img.size
 
 
-shades = LVCS_DVCS(img, n=3, k=3)
+shades = LVCS_DVCS(img, m=9, n=3, k=3)
 print len(shades[0])
 #print shades[0]
 print h
