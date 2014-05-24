@@ -10,12 +10,13 @@ import sys, getopt
 def main(argv):
 
     try:
-        opts, args = getopt.getopt(argv, "m:n:k:f:", [])
+        opts, args = getopt.getopt(argv, "m:n:k:f:r:", [])
 
     except getopt.GetoptError:
-        print 'generate_matrix.py -m <m> -n <n> -k <k> -f <f>'
+        print 'generate_matrix.py -m <number> -n <number> -k <number < n> -f <f> -r <0 or 1>'
         sys.exit(2)
 
+    ran = False
     for opt, arg in opts:
         if opt == '-m':
             m = int(arg)
@@ -25,8 +26,26 @@ def main(argv):
             k = int(arg)
         elif opt == '-f':
             df = int(arg)
+        elif opt == '-r':
+            if arg == '1':
+                ran = True
+                print 'Random mode'
 
-    generate(m, n, k, df)
+    if ran:
+        generate(m, n, k, df)
+    else:
+        for (b0,b1) in search_matrix(n,m,k, df):
+            factor = get_diff_factor(b0,b1,k)
+            valid = True
+            for (f,v) in zip(factor,[df] * len(factor)):
+                if f < v:
+                    valid =False
+
+            if valid:
+                print_matrixes(b0,b1)
+
+
+
 
 
 def generate(m=6,n=3,k=3, df = 2):

@@ -4,11 +4,8 @@ sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
 
 import random
 import itertools
-import string
-import math
-from PIL import Image
-from image.processor import *
-from UserString import MutableString
+import copy
+from printing import *
 
 
 
@@ -196,6 +193,110 @@ def get_random_matrix(n,m):
 
     return result
 
+def search_matrix(n,m, k = 2, mindf = 1):
+    matrix = []
+    for i in range(0, 2):
+        matrix.append([])
+
+    matrix_list = []
+    #obtain initial matrix 2xn
+    search_matrix_aux(matrix, 0, 0, 2, m, k, mindf, matrix_list)
+    #filter using partial validation
+    b0b1list = itertools.combinations(matrix_list, 2)
+
+    b0b1pairs = []
+    for (b0, b1) in b0b1list:
+        if security_restriction(b0, b1, 2):
+            #print_matrixes(b0, b1, 'Cumple seguridad')
+            b0b1pairs.append([b0, b1])
+        #else:
+        #    print_matrixes(b0, b1, 'NO Cumple seguridad')
+
+    #print n
+    for naux in range(2, n):
+        matrix_dict = {}
+        b0b1pairsaux = []
+        for (b0, b1) in b0b1pairs:
+            b0 = copy.deepcopy(b0)
+            b1 = copy.deepcopy(b1)
+            b0.append([])
+            b1.append([])
+
+            b0ml = []
+            b1ml = []
+            #print_matrix(b0)
+            b0bin = matrix_to_binary(b0)
+            b1bin = matrix_to_binary(b1)
+
+            #print_matrixes(b0, b1, 'Process')
+            if b0bin in matrix_dict.keys():
+                b0ml = matrix_dict[b0bin]
+                #print 'Recover from dict %s'%b0bin
+            else:
+                search_matrix_aux(b0, naux, 0, naux + 1, m, k, mindf, b0ml)
+                matrix_dict[b0bin] = copy.deepcopy(b0ml)
+
+            if b1bin in matrix_dict.keys():
+                b1ml = matrix_dict[b1bin]
+                #print 'Recover from dict %s'%b1bin
+            else:
+                search_matrix_aux(b1, naux, 0, naux + 1, m, k, mindf, b1ml)
+                matrix_dict[b1bin] = copy.deepcopy(b1ml)
+
+
+            #print_matrix( b0ml[0])
+            for b0 in b0ml:
+                for b1 in b1ml:
+                    if security_restriction(b0, b1, naux):
+                        #print_matrixes(b0,b1,'Cumple seguridad')
+                        b0b1pairsaux.append([b0, b1])
+                    #else:
+                    #    print_matrixes(b0,b1,'NO Cumple seguridad')
+
+            #print 'Finish processing'
+
+        b0b1pairs = copy.deepcopy(b0b1pairsaux)
+
+    result = []
+    for (b0, b1) in b0b1pairs:
+        if validate(b0, b1, k):
+            #print_matrixes(b0,b1,'Valida: %s'%get_diff_factor(b0,b1,k))
+            result.append([b0, b1])
+
+    return result
+
+
+def matrix_to_binary(m):
+    binary = 0
+    for r in m:
+        for c in r:
+            val = 1 if c else 0
+            binary = (binary | val) << 1
+
+    return binary
+
+
+def search_matrix_aux(matrix, i, j, n, m, k, mindf, result):
+    m1 = copy.deepcopy(matrix)
+    m2 = copy.deepcopy(matrix)
+
+    m1[i].append(True)
+    m2[i].append(False)
+
+    #print m1
+    #print m2
+    if j < m - 1:
+        j += 1
+        search_matrix_aux(m1, i, j, n, m, k, mindf, result)
+        search_matrix_aux(m2, i, j, n, m, k, mindf, result)
+    elif i < n -1:
+        i += 1
+        j = 0
+        search_matrix_aux(m1, i, j, n, m, k, mindf, result)
+        search_matrix_aux(m2, i, j, n, m, k, mindf, result)
+    else:
+        result.append(m1)
+        result.append(m2)
 
 #########################################################
 # DVCS RESTRICCTIONS
@@ -212,23 +313,34 @@ def get_diff_factor(b0,b1, k):
 
     return r
 
-
-def validate(b0, b1, k):
+def contrast_restriction(b0, b1, k):
     h0 = h_(or_(b0,k))
     h1 = h_(or_(b1,k))
 
-
     #print '%s >= %s'%(h0,h1)
     for (vh0,vh1) in zip(h0,h1):
-        if vh0 > vh1:
+        if vh0 >= vh1:
             return False
 
+    return True
+
+
+def security_restriction(b0,b1, k):
     for r in range(2,k):
         h0 = h_(or_(b0,r))
         h1 = h_(or_(b1,r))
         if h0 != h1:
             #print '%s != %s'%(h0,h1)
             return False
+
+    return True
+
+def validate(b0, b1, k):
+    if not contrast_restriction(b0,b1,k):
+        return False
+
+    if not security_restriction(b0,b1,k):
+        return False
 
     return True
 
