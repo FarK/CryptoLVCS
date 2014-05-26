@@ -345,6 +345,50 @@ def LVCS_DVCS(image, channel=0, thresold = 125, k=2, n=3):
 
     return result
 
+def LVCS_PVCS(image, channel=0, thresold = 125, k=2, n=3):
+    if k == 2 and n == 3:
+        b0 = get_B_23()[0]
+        b1 = get_B_23()[1]
+
+    if k == 2 and n == 2:
+        b0 = get_B_22()[0]
+        b1 = get_B_22()[1]
+
+    if k == 3 and n > 2:
+        b0 = get_B_3n(n)[0]
+        b1 = get_B_3n(n)[1]
+
+    sdata = image.getdata()
+
+    result = []
+    for i in range(0,len(b0)):
+        result.append([])
+
+    for p in sdata:
+        l0 = create_L(b0)
+        l1 = create_L(b1)
+        t0 = list(itertools.permutations(transpose(l0)))
+        t1 = list(itertools.permutations(transpose(l1)))
+
+        lc = t1 if  p[channel] < thresold else t0
+
+        #get a random matrix
+        m = lc[random.randint(0,len(lc)-1)]
+
+        #transpose
+        t = transpose( m )
+
+        #Choose a random column
+	colIndx = random.randint(0, len(t[0])-1);
+	col = []
+	for row in t:
+            col.append(row[colIndx])
+
+        #Create a shadow for each element in selected row
+        for i in range(0,len(result)):
+            result[i].append(col[i])
+
+    return result
 
 # Convert a vecto to a superpixel.
 # If vector is [A,B,D,E]
