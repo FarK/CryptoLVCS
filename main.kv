@@ -3,7 +3,15 @@
 <MainWidget>:
 	algorithm: id_algorithm
 	secret_image: id_secret_image
-	parameters: id_parameters 
+	parameters: id_parameters
+	shades: id_shades
+	result_image: id_result
+	canvas:
+		Color:
+			rgba: 1,1,1,1
+		Rectangle:
+			pos:self.pos
+			size:self.size 
 
 	BoxLayout:
 		orientation: 'vertical'
@@ -33,20 +41,46 @@
 
 		Image:
 			id: id_secret_image
-			source: "image.gif"
-		
+			size_hint:1,0.2
 		Button:
 			size_hint: 1, 0.1
 			text: "Generate"
 			on_press: root.generateShadows()
+		
+		BoxLayout:
+			canvas:
+				Color:
+					rgba:1,0,0,1
+				Rectangle:
+					pos:self.pos
+					size:self.size 
+			
+			orientation: 'vertical'
+			size_hint:1,0.2
 
+			Label:
+				text: "All shadows result:"
+				size_hint:1,0.2
+			Image:
+				id: id_result
+				size_hint:1,0.8		
+
+		ShadeLayout:
+			id: id_shades
+			size_hint:1,0.4
+	
+
+		
 <LoadDialog>:
+    filechooser: id_filechooser
+
     BoxLayout:
         size: root.size
         pos: root.pos
         orientation: "vertical"
+
         FileChooserListView:
-            id: filechooser
+            id: id_filechooser
 
         BoxLayout:
             size_hint_y: None
@@ -57,4 +91,4 @@
 
             Button:
                 text: "Load"
-                on_release: root.load(filechooser.path, filechooser.selection)
+                on_release: root.load(id_filechooser.path, id_filechooser.selection)

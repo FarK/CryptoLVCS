@@ -4,11 +4,12 @@ from PIL import ImageFont
 from PIL import ImageDraw
 
 
-def addtext(text, image, cols, font_size = 8, rows = None):
+def addtext(text, image, cols, font_size = 8, rows = None, alpha = False):
     red = (255,0,0,255)
     green = (0,255,0,255)
     blue = (0,0,255,255)
-    black = (0,0,0,255)
+    black = '#000000'
+    red = '#FF0000'
 
     if rows is None:
         rows = int(len(text) / cols) + 1
@@ -23,7 +24,7 @@ def addtext(text, image, cols, font_size = 8, rows = None):
         # create image
         image = createimage(rows * len(text[0]),
                             cols * len(text[0][0]),
-                            font_size)
+                            font_size, alpha)
 
     else:
         # check the size
@@ -69,7 +70,7 @@ def addtext(text, image, cols, font_size = 8, rows = None):
 
             else:
                 draw.text((c * font_size, r * font_size),
-                          superpixel, black, font=font)
+                          superpixel, fill=black, font=font)
 
             index = index + 1
 
@@ -83,7 +84,7 @@ def addtext(text, image, cols, font_size = 8, rows = None):
 
 def overlaping(img1, img2, channel=0, thresold=125):
     white = (255,255,255)
-    black = (0,0,0)
+    black = (0,0,0,0)
     data1 = img1.getdata()
     data2 = img2.getdata()
     #data = [filter(lambda x: x in data1, sublist) for sublist in data2]
@@ -101,11 +102,14 @@ def overlaping(img1, img2, channel=0, thresold=125):
     return result
 
 
-def createimage(rows, cols, font_size = 16):
+def createimage(rows, cols, font_size = 16, alpha = False):
     # use a (r, g, b) tuple to represent colors
     #red = (255,0,0)
-    white = (255,255,255)
-
+    white = (255,255,255,255)
+    
     # create a new image surface
     # make the background white (default bg=black)
-    return Image.new("RGB", (cols * font_size, (rows + 1) * font_size), white)
+    if alpha:
+    	return Image.new("RGBA", (cols * font_size, (rows + 1) * font_size), (0, 0, 0, 0))
+    else:
+    	return Image.new("RGB", (cols * font_size, (rows + 1) * font_size), (255,255,255))

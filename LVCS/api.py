@@ -55,22 +55,25 @@ def LVCS_DVCS(image, channel=0, thresold=125, k=2, n=3, m=6):
     if k == 2 and n == 3:
         b0 = get_B_23()[0]
         b1 = get_B_23()[1]
+	m = 2
 
     if k == 2 and n == 2:
         b0 = get_B_22()[0]
         b1 = get_B_22()[1]
+	m = 2
 
     if k == 3 and n == 3 and m == 6:
         b0 = get_B_33()[0]
         b1 = get_B_33()[1]
 
-    if k == 3 and n == 3 and m == 9:
+    elif k == 3 and n == 3 and m == 9:
         b0 = get_B_33_m9()[0]
         b1 = get_B_33_m9()[1]
 
     elif k == 3 and n > 2:
         b0 = get_B_3n(n)[0]
         b1 = get_B_3n(n)[1]
+	
 
     print_matrix(b0)
     print_matrix(b1)
@@ -93,7 +96,6 @@ def LVCS_DVCS(image, channel=0, thresold=125, k=2, n=3, m=6):
 
         lc = l1 if p[channel] < thresold else l0
 
-        #print_letter_matrix(lc)
         for i in range(0, n):
             r = []
             for j in v:
