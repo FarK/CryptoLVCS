@@ -2,85 +2,59 @@
 
 <MainWidget>:
 	algorithm: id_algorithm
-	n: id_n
-	k: id_k
-	m: id_m
-	imageSource: id_loadImageText
+	secret_image: id_secret_image
+	parameters: id_parameters 
 
 	BoxLayout:
-		orientation: 'horizontal'
+		orientation: 'vertical'
 
-		BoxLayout:
-			orientation: 'vertical'
-			size_hint: 0.5, 1
+		StackLayout:
+			orientation: 'lr-tb'
+			size_hint: 1, 0.1
 
 			Spinner:
+				size_hint:0.3,1
 				id: id_algorithm
-				size_hint: 1, 0.1
 				text: "Select Algorithm"
-				values: "LVCS", "PVCS", "DVCS"
+				values: "LVCS-DVCS",""
 
-			GridLayout:
-				cols: 2
-				size_hint: 1, None
-				
-				Label: 
-					text: "n"
-				TextInput:
-					id: id_n
-					multiline: False
-				Label: 
-					text: "k"
-				TextInput:
-					id: id_k
-					multiline: False
-				Label: 
-					text: "m"
-				TextInput:
-					id: id_m
-					multiline: False
-
-			Button:
-				size_hint: 1, 0.1
-				text: "Generate shadows"
-				on_press: root.generateShadows()
-
-			BoxLayout:
-				orientation: 'horizontal'
-				size_hint: 1, 0.1
-
-				Button:
-					id: id_loadImageButton
-					text: "Load Image"
-					on_press: root.loadImage(id_loadImageText.text)
-
-				TextInput:
-					id: id_loadImageText
-					text: "image.gif"
-					multiline: False
-
-			GridLayout:
-				size_hint: 0.5, 1
-				cols: 2
-
-				Label:
-					text: "1"
-				CheckBox:
-
-				Label:
-					text: "2"
-				CheckBox:
-
-				Label:
-					text: "3"
-				CheckBox:
+			Spinner:
+				size_hint:0.3,1
+				id: id_parameters
+				text: "Parameters"
+				values: "(2,2)","(2,3)","(3,3)"
 			
-				Label:
-					text: "4 (esto se tiene q autogenerar)"
-				CheckBox:
+			Button:
+				size_hint:0.3,1
+				id: id_loadImageButton
+				text: "Load secret"
+				on_press: root.show_load()
+
 
 		Image:
+			id: id_secret_image
 			source: "image.gif"
+		
+		Button:
+			size_hint: 1, 0.1
+			text: "Generate"
+			on_press: root.generateShadows()
 
-		Image:
-			source: "image.gif"
+<LoadDialog>:
+    BoxLayout:
+        size: root.size
+        pos: root.pos
+        orientation: "vertical"
+        FileChooserListView:
+            id: filechooser
+
+        BoxLayout:
+            size_hint_y: None
+            height: 30
+            Button:
+                text: "Cancel"
+                on_release: root.cancel()
+
+            Button:
+                text: "Load"
+                on_release: root.load(filechooser.path, filechooser.selection)
