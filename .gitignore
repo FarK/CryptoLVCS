@@ -1,0 +1,16 @@
+#PYTON COMPILE FILES
+*.pyc
+
+#IMAGES
+*.jpg
+*.png
+*.bmp
+
+#FONTS
+*.ttf
+
+#Buildozer
+.buildozer
+
+#Coure.fon
+voure.fon
