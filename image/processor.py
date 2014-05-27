@@ -14,7 +14,8 @@ def addtext(text, image, cols, font_size = 8, rows = None):
         rows = int(len(text) / cols) + 1
 
     #load font
-    font = ImageFont.truetype("/media/windows/Projects/CryptoLVCS/image/DejaVuSans.ttf", font_size)
+    #font = ImageFont.truetype("/media/windows/Projects/CryptoLVCS/image/DejaVuSans.ttf", font_size)
+    font = ImageFont.truetype("../image/DejaVuSans.ttf", font_size)
 
     #reduce space between letters
     font_size -= int(font_size * 0.3)
