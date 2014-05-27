@@ -37,10 +37,22 @@ class MainWidget(BoxLayout):
 
 	valid_algorithms = ['LVCS-DVCS']
 	valid_parameters = {'(2,2)':(2,2,None),'(2,3,None)':(2,2,None),'(3,3)':(3,3,9)}
+	
+	generate_counter = 0
+
 	def validate(self):
 		return self.parameters.text in self.valid_parameters.keys() and \
 		       self.algorithm.text in self.valid_algorithms
 	 
+	def clean_dir(self,folder):
+
+		for the_file in os.listdir(folder):
+    			file_path = os.path.join(folder, the_file)
+    			try:
+        			if os.path.isfile(file_path):
+            				os.unlink(file_path)
+    			except Exception, e:
+        			pass	
 		
 	def generateShadows(self):
 		if self.validate():
@@ -57,11 +69,12 @@ class MainWidget(BoxLayout):
 			
 			pos = (0,0)
 			result = None
+			self.clean_dir('./temp')
 			for i in range(0,len(shades_info)):
 				#get shades
 				shade_info = shades_info[i]
 				shade = addtext(shade_info, None, w, rows = h, alpha=True)
-				path = './temp/shade%s.png'%i
+				path = './temp/shade%s%s.png'%(self.generate_counter,i)
 				 
 				#shave images
 				shade.save(path, 'PNG')
@@ -88,8 +101,10 @@ class MainWidget(BoxLayout):
 						            result)
 
 			if not result is None:
-				result.save('./temp/result.png', 'PNG')
-				self.result_image.source = './temp/result.png'
+				result.save('./temp/result%s.png'%self.generate_counter, 'PNG')
+				self.result_image.source = './temp/result%s.png'%self.generate_counter
+
+			self.generate_counter += 1
 		else:
 		   
 		   msg = MsgBox(text='You should set the algorithm and\n the parameters and load a secret image')

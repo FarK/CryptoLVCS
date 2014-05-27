@@ -3,6 +3,61 @@ from PIL import Image
 from PIL import ImageFont
 from PIL import ImageDraw
 
+def get_image(data, w, h, image=None, alpha = False):
+    black = '#000000'
+
+    wr = w * len(data[0])
+    hr = h * len(data[0][0])
+     
+    if image is None:
+        # create image
+        image = createimage(wr, hr, 1, alpha)
+  
+    index = 0
+    rf = 0
+    rdata = []
+    for r in range(0, w):
+        cf = 0
+        for c in range(0, h):
+            superpixel = data[index]
+
+            if len(superpixel[0]) > 1:
+                srf = 0
+                for rsp in superpixel:
+                   for byte in rsp:
+		       if byte:
+		           rdata.append((0, 0, 0))
+		       else:
+			   if alpha:
+				rdata.append((0,0,0,0))
+			   else:
+			   	rdata.append((255,255,255))
+
+                       cf += 1
+
+                   srf += 1
+                   cf -= len(rsp)
+
+
+                cf += len(superpixel[0])
+
+            else:
+		if data[index]:
+		    rdata.append((0, 0, 0))
+		else:
+		    rdata.append((255,255,255))
+            index = index + 1
+
+            if(index >= len(data)):
+                pass
+
+        rf += len(data[0])
+
+    print len(rdata)
+    print (wr, hr)
+    image.putdata(rdata)
+    return image
+
 
 def addtext(text, image, cols, font_size = 16, rows = None, alpha = False):
     red = (255,0,0,255)

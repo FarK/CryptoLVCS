@@ -83,7 +83,6 @@ def create_B1(n,m, k, h, l):
 ########################################################
 # GETTERS METHODS
 #######################################################
-'''
 def get_B_23():
     return ([[True, False, False],
              [True, False, False],
@@ -100,10 +99,9 @@ def get_B_22():
              [[True, False],
              [False, True]],
             )
-'''
 
 #fake version -> B0 all 0
-def get_B_23():
+def get_B_23_fake():
     return ([[False, False, False],
              [False, False, False],
              [False, False, False]],
@@ -113,7 +111,7 @@ def get_B_23():
             )
 
 
-def get_B_22():
+def get_B_22_fake():
     return ([[False, False],
              [False, False]],
              [[True, False],
