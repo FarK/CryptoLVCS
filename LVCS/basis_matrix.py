@@ -119,23 +119,32 @@ def get_B_22_fake():
             )
 
 def get_B_33():
-    return ([[False, True, False, True, False, False],
-             [True, True, False, True, False, True],
-             [True, False, False, True, False, True]],
-            [[True, True, False, False, False, False],
-             [False, False, True, True, False, False],
-             [False, False, False, False, True, True]]
+    return (
+[[
+     (True, False, False, True, False, True) ,
+     (True, False, True, True, False, False) ,
+     (False, False, True, True, False, True) ,
+],[
+     (False, True, False, False, True, True) ,
+     (False, False, True, False, True, True) ,
+     (True, False, False, False, True, True) ,
+]]
+
             )
 
-#difference factor 3
-
+#difference factor 2
 def get_B_33_m9():
-    return ([[False, True, True, True, True, False, False, True, False],
-             [False, True, True, True, False, False, True, False, False],
-             [False, True, True, True, False, False, False, True, False]],
-             [[False, True, True, True, True, False, True, False, False],
-              [True, False, False, False, False,True, False, True, True],
-              [False, False, True, True, True, False, True, False, False],]
+    return (
+[[
+     [True, True, True, True, False, False, True, False, False] ,
+     [True, False, True, True, False, True, True, False, True] ,
+     [True, True, False, False, False, True, False, False, True] ,
+],[
+     [True, True, True, False, False, False, True, True, False] ,
+     [True, True, False, True, False, True, True, False, False] ,
+     [False, True, False, False, True, False, False, False, True] ,
+]]
+
             )
 
 # Source: Criptografía Visual Basada en el Esquema de Umbral (2010)
@@ -182,12 +191,14 @@ def get_B_3n(n):
 def get_random_matrix(n,m):
 
     result = []
-    for r in range(0,n):
-        row = []
-        for c in range(0,m):
-            row.append(random.choice([True, False]))
 
-        result.append(row)
+    row = []
+    for c in range(0,m):
+	row.append(random.choice([True,False]))
+
+    per = list(itertools.permutations(row))
+    for r in range(0,n):
+        result.append(copy.deepcopy(random.choice(per)))
 
     return result
 
@@ -324,12 +335,14 @@ def contrast_restriction(b0, b1, k):
 
 
 def security_restriction(b0,b1, k):
-    for r in range(2,k):
+    for r in range(1,k):
         h0 = h_(or_(b0,r))
         h1 = h_(or_(b1,r))
-        if h0 != h1:
-            #print '%s != %s'%(h0,h1)
+	aux = [h0[0]] * len(h0)
+        if aux != h0 or aux != h1:
             return False
+	else:
+            print '%s == %s'%(h0,h1)
 
     return True
 
@@ -345,7 +358,7 @@ def validate(b0, b1, k):
 
 
 def or_(matrix, r):
-    per = itertools.permutations(matrix,r)
+    per = itertools.combinations(matrix,r)
 
     #return per
     r_final = []

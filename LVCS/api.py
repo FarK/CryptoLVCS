@@ -78,10 +78,10 @@ def get_basis_matrix(k, n, m, fake=True):
         b0 = get_B_3n(n)[0]
         b1 = get_B_3n(n)[1]
 	
-    return (b0, b1)
+    return (b0, b1, m)
 
 def DVCS(image, channel=0, thresold=125, k=2, n=3, m=2):
-    (b0, b1) = get_basis_matrix(k, n, m, fake=False)
+    (b0, b1, m) = get_basis_matrix(k, n, m, fake=False)
 
     sdata = image.getdata()
 
@@ -91,10 +91,9 @@ def DVCS(image, channel=0, thresold=125, k=2, n=3, m=2):
 
     for p in sdata:
 	v = int_permutation(m)
+	print v
 	lc = b1 if p[channel] < thresold else b0
 
-	print v
-	print n
 	for i in range(0, n):
 	    r = []
 	    for j in v:
@@ -106,7 +105,7 @@ def DVCS(image, channel=0, thresold=125, k=2, n=3, m=2):
     return result
 
 def LVCS_DVCS(image, channel=0, thresold=125, k=2, n=3, m=6):
-    (b0, b1) = get_basis_matrix(k, n, m, fake=True)  
+    (b0, b1, m) = get_basis_matrix(k, n, m, fake=True)  
 
     sdata = image.getdata()
 
@@ -152,7 +151,6 @@ def create_superpixel(vector):
         for i in range(0,dim):
             result.append(vector[i*dim:(i*dim)+dim])
 
-	print result
         return result
 
     elif len(vector)%2 == 0:

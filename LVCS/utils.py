@@ -4,6 +4,7 @@ import random
 def int_permutation(n):
     result = [0]
 
+    print n
     for num in range(0, n):
         i = random.randint(0, num)
 

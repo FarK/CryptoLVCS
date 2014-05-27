@@ -35,8 +35,8 @@ class MainWidget(BoxLayout):
         shades = ObjectProperty(None)
 	result_image = ObjectProperty(None)
 
-	valid_algorithms = ['LVCS-DVCS']
-	valid_parameters = {'(2,2)':(2,2,None),'(2,3,None)':(2,2,None),'(3,3)':(3,3,9)}
+	valid_algorithms = ['DVCS','LVCS-DVCS','LVCS-PVCS']
+	valid_parameters = {'(2,2)':(2,2,None),'(2,3)':(2,3,None),'(3,3)':(3,3,6)}
 	
 	generate_counter = 0
 
@@ -60,11 +60,17 @@ class MainWidget(BoxLayout):
 		   n = self.valid_parameters[self.parameters.text][1]
 		   m = self.valid_parameters[self.parameters.text][2]
 
-		   if self.algorithm.text == self.valid_algorithms[0]:
+		   if self.algorithm.text == self.valid_algorithms[1] or \
+                      self.algorithm.text == self.valid_algorithms[2]:
+
 			image = Image.open(self.secret_image.source)
 			(w,h) = image.size
+                        
+			if self.algorithm.text == self.valid_algorithms[1]:
+			    shades_info = LVCS_DVCS(image=image, k=k, n=n, m=m)
+			elif self.algorithm.text == self.valid_algorithms[2]:
+			    shades_info = LVCS_PVCS(image=image, k=k, n=n, m=m)
 
-			shades_info = LVCS_DVCS(image, k=k, n=n, m=m)
 			self.shades.clear_widgets()
 			
 			pos = (0,0)
@@ -98,6 +104,47 @@ class MainWidget(BoxLayout):
 					result = addtext(shade_info, None, w, rows=h, alpha=False)
 				else:
 					result = overlaping(addtext(shade_info, None, w, rows=h, alpha=False),
+						            result)
+		   elif self.algorithm.text == self.valid_algorithms[0]:
+
+			image = Image.open(self.secret_image.source)
+			(w,h) = image.size
+                        
+			shades_info = DVCS(image=image, k=k, n=n, m=m)
+			self.shades.clear_widgets()
+			
+			pos = (0,0)
+			result = None
+			self.clean_dir('./temp')
+			for i in range(0,len(shades_info)):
+				#get shades
+				shade_info = shades_info[i]
+				shade = get_image(shade_info, image = None, w = w, h = h, alpha=True)
+				path = './temp/shade%s%s.png'%(self.generate_counter,i)
+				 
+				#shave images
+				shade.save(path, 'PNG')
+				
+				#set spacing of the container
+				self.shades.spacing = self.size[0]*float(0.1)/len(shades_info)
+				rw = float(0.9) / len(shades_info)
+				wimage = Factory.Image(
+						source=path, 
+						allow_stretch=True,
+						size_hint=(rw,1)
+					)
+		
+
+				wimage.pos = pos
+				self.shades.add_widget(wimage)
+				dx = self.size[0] / len(shades_info)
+				pos = (pos[0] + dx + self.spacing, 0)
+
+				if result is None:
+					result = get_image(shade_info, image=None, w=w, h=h, alpha=False)
+				else:
+					result = overlaping(get_image(shade_info, 
+							image=None, w=w, h=h, alpha=False),
 						            result)
 
 			if not result is None:

@@ -15,7 +15,7 @@ def get_image(data, w, h, image=None, alpha = False):
   
     index = 0
     rf = 0
-    rdata = []
+    
     for r in range(0, w):
         cf = 0
         for c in range(0, h):
@@ -23,21 +23,24 @@ def get_image(data, w, h, image=None, alpha = False):
 
             if len(superpixel[0]) > 1:
                 srf = 0
-                for rsp in superpixel:
-                   for byte in rsp:
-		       if byte:
-		           rdata.append((0, 0, 0))
+                for l in superpixel:
+                   for p in l:
+                       
+		       if p:
+			   image.putpixel((cf, rf+srf), (0, 0, 0))
+ 
+		       	   #print "X (%s,%s)"%(rf+srf, cf) 
 		       else:
-			   if alpha:
-				rdata.append((0,0,0,0))
-			   else:
-			   	rdata.append((255,255,255))
 
+		       	   #print "  (%s,%s)"%(rf+srf, cf) 
+			   if alpha:
+			   	image.putpixel((cf, rf+srf), (0, 0, 0, 0))
+			   else:
+			   	image.putpixel((cf, rf+srf), (255, 255, 255)) 
                        cf += 1
 
                    srf += 1
-                   cf -= len(rsp)
-
+                   cf -= len(l)
 
                 cf += len(superpixel[0])
 
@@ -53,9 +56,6 @@ def get_image(data, w, h, image=None, alpha = False):
 
         rf += len(data[0])
 
-    print len(rdata)
-    print (wr, hr)
-    image.putdata(rdata)
     return image
 
 
@@ -137,9 +137,10 @@ def addtext(text, image, cols, font_size = 8, rows = None, alpha = False):
     del draw
     return image
 
-def overlaping(img1, img2, channel=0, thresold=125):
+def overlaping(img1, img2, channel=0, thresold=200):
     white = (255,255,255)
     black = (0,0,0,0)
+    red = (255,0,0)
     data1 = img1.getdata()
     data2 = img2.getdata()
     #data = [filter(lambda x: x in data1, sublist) for sublist in data2]
