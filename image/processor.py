@@ -59,7 +59,7 @@ def get_image(data, w, h, image=None, alpha = False):
     return image
 
 
-def addtext(text, image, cols, font_size = 8, rows = None, alpha = False):
+def addtext(text, image, cols, font_size = 16, rows = None, alpha = False):
     red = (255,0,0,255)
     green = (0,255,0,255)
     blue = (0,0,255,255)
@@ -70,7 +70,8 @@ def addtext(text, image, cols, font_size = 8, rows = None, alpha = False):
         rows = int(len(text) / cols) + 1
 
     #load font
-    font = ImageFont.truetype("/media/windows/Projects/CryptoLVCS/image/DejaVuSans.ttf", font_size)
+    #font = ImageFont.truetype("/media/windows/Projects/CryptoLVCS/image/DejaVuSans.ttf", font_size)
+    font = ImageFont.truetype("image/DejaVuSans.ttf", font_size)
 
     #reduce space between letters
     font_size -= int(font_size * 0.3)
