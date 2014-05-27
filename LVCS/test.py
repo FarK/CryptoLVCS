@@ -6,10 +6,24 @@ import itertools
 from image.processor import *
 from PIL import Image
 
-img = Image.open('resources/images/li.png')
+img = Image.open('resources/images/window.png')
 (w,h) = img.size
 
 
+shades = DVCS(img, n=3, k=3, m=9)
+img1 = get_image(shades[0], w=w, h=h)
+img1.save('resources/results/shade1.png', 'PNG')
+img2 = get_image(shades[1], w=w, h=h)
+img2.save('resources/results/shade2.png', 'PNG')
+img3 = get_image(shades[2], w=w, h=h)
+img3.save('resources/results/shade3.png', 'PNG')
+result = overlaping(img1,img2)
+result.save('resources/results/subresult12.png', 'PNG')
+result = overlaping(result,img3)
+result.save('resources/results/result.png', 'PNG')
+
+
+'''
 shades = LVCS_DVCS(img, n=3, k=3, m=9)
 print len(shades[0])
 #print shades[0]
@@ -24,7 +38,6 @@ img3 = addtext(shades[2], None, w, rows = h)
 img3.save('resources/results/shade3.png', 'PNG')
 result = overlaping(result,img3)
 
-
-
 overlaping(img1,img3).save('resources/results/subresult.png', 'PNG')
 result.save('resources/results/result.png', 'PNG')
+'''
