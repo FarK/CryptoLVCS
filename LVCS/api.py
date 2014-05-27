@@ -105,7 +105,7 @@ def LVCS_DVCS(image, channel=0, thresold=125, k=2, n=3, m=6):
 
     return result
 
-def LVCS_PVCS(image, channel=0, thresold = 125, k=2, n=3):
+def LVCS_PVCS(image, channel=0, thresold=125, k=2, n=3, m=6):
     if k == 2 and n == 3:
         b0 = get_B_23()[0]
         b1 = get_B_23()[1]
@@ -114,7 +114,15 @@ def LVCS_PVCS(image, channel=0, thresold = 125, k=2, n=3):
         b0 = get_B_22()[0]
         b1 = get_B_22()[1]
 
-    if k == 3 and n > 2:
+    if k == 3 and n == 3 and m == 6:
+        b0 = get_B_33()[0]
+        b1 = get_B_33()[1]
+
+    if k == 3 and n == 3 and m == 9:
+        b0 = get_B_33_m9()[0]
+        b1 = get_B_33_m9()[1]
+
+    elif k == 3 and n > 2:
         b0 = get_B_3n(n)[0]
         b1 = get_B_3n(n)[1]
 
@@ -124,29 +132,30 @@ def LVCS_PVCS(image, channel=0, thresold = 125, k=2, n=3):
     for i in range(0,len(b0)):
         result.append([])
 
+    l0 = create_L(b0)
+    l1 = create_L(b1)
+
     for p in sdata:
         l0 = create_L(b0)
         l1 = create_L(b1)
-        t0 = list(itertools.permutations(transpose(l0)))
-        t1 = list(itertools.permutations(transpose(l1)))
 
-        lc = t1 if  p[channel] < thresold else t0
+        v = int_permutation(m)
 
-        #get a random matrix
-        m = lc[random.randint(0,len(lc)-1)]
-
-        #transpose
-        t = transpose( m )
+        lc = l1 if p[channel] < thresold else l0
 
         #Choose a random column
-	colIndx = random.randint(0, len(t[0])-1);
-	col = []
-	for row in t:
-            col.append(row[colIndx])
+	colIndx = random.randint(0, len(v)-1);
+
+        c = []
+        for i in range(0, n):
+            r = []
+            for j in v:
+                r = r + [lc[i][j]]
+	    c.append(r[colIndx])
 
         #Create a shadow for each element in selected row
         for i in range(0,len(result)):
-            result[i].append(col[i])
+            result[i].append(c[i])
 
     return result
 
