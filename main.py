@@ -34,6 +34,7 @@ class MainWidget(BoxLayout):
 	parameters = ObjectProperty(None)
         shades = ObjectProperty(None)
 	result_image = ObjectProperty(None)
+	bar = ObjectProperty(None)
 
 	valid_algorithms = ['DVCS','LVCS-DVCS','LVCS-PVCS']
 	valid_parameters = {'(2,2)':(2,2,None),'(2,3)':(2,3,None),'(3,3)':(3,3,6)}
@@ -72,74 +73,74 @@ class MainWidget(BoxLayout):
 			    shades_info = LVCS_PVCS(image=image, k=k, n=n, m=m)
 
 			self.shades.clear_widgets()
-			
+			self.bar.clear_widgets()
+	
 			pos = (0,0)
 			result = None
 			self.clean_dir('./temp')
 			for i in range(0,len(shades_info)):
+
+				path = './temp/shade%s%s.png'%(self.generate_counter,i)
+
+				#add buton in shades bar
+				wb = float(1)/len(shades_info)
+				wbutton = Factory.Button(
+						text='Shade %s'%(i+1),
+						size_hint=(wb,1)
+							)
+				wbutton.shade_path = path
+				wbutton.bind(on_press=self.shade_button_press)
+				self.bar.add_widget(wbutton)
+	
 				#get shades
 				shade_info = shades_info[i]
 				shade = addtext(shade_info, None, w, rows = h, alpha=True)
-				path = './temp/shade%s%s.png'%(self.generate_counter,i)
 				 
 				#shave images
 				shade.save(path, 'PNG')
 				
-				#set spacing of the container
-				self.shades.spacing = self.size[0]*float(0.1)/len(shades_info)
-				rw = float(0.9) / len(shades_info)
-				wimage = Factory.Image(
-						source=path, 
-						allow_stretch=True,
-						size_hint=(rw,1)
-					)
-		
-
-				wimage.pos = pos
-				self.shades.add_widget(wimage)
-				dx = self.size[0] / len(shades_info)
-				pos = (pos[0] + dx + self.spacing, 0)
-
 				if result is None:
 					result = addtext(shade_info, None, w, rows=h, alpha=False)
 				else:
 					result = overlaping(addtext(shade_info, None, w, rows=h, alpha=False),
 						            result)
+		
+			self.generate_counter += 1
+
 		   elif self.algorithm.text == self.valid_algorithms[0]:
 
 			image = Image.open(self.secret_image.source)
 			(w,h) = image.size
                         
 			shades_info = DVCS(image=image, k=k, n=n, m=m)
-			self.shades.clear_widgets()
-			
+		
+			self.shades.clear_widgets()	
+			self.bar.clear_widgets()
+
+
 			pos = (0,0)
 			result = None
 			self.clean_dir('./temp')
-			for i in range(0,len(shades_info)):
+			for i in range(0,len(shades_info)):	
+				path = './temp/shade%s%s.png'%(self.generate_counter,i)
+				
+				#add buton in shades bar
+				wb = float(1)/len(shades_info)
+				wbutton = Factory.ShadeButton(
+						text='Shade %s'%(i+1),
+						size_hint=(wb,1),
+					)
+				wbutton.shade_path = path
+				wbutton.bind(on_press=self.shade_button_press)
+				self.bar.add_widget(wbutton)
+				
 				#get shades
 				shade_info = shades_info[i]
 				shade = get_image(shade_info, image = None, w = w, h = h, alpha=True)
-				path = './temp/shade%s%s.png'%(self.generate_counter,i)
 				 
 				#shave images
 				shade.save(path, 'PNG')
 				
-				#set spacing of the container
-				self.shades.spacing = self.size[0]*float(0.1)/len(shades_info)
-				rw = float(0.9) / len(shades_info)
-				wimage = Factory.Image(
-						source=path, 
-						allow_stretch=True,
-						size_hint=(rw,1)
-					)
-		
-
-				wimage.pos = pos
-				self.shades.add_widget(wimage)
-				dx = self.size[0] / len(shades_info)
-				pos = (pos[0] + dx + self.spacing, 0)
-
 				if result is None:
 					result = get_image(shade_info, image=None, w=w, h=h, alpha=False)
 				else:
@@ -147,16 +148,46 @@ class MainWidget(BoxLayout):
 							image=None, w=w, h=h, alpha=False),
 						            result)
 
-			if not result is None:
-				result.save('./temp/result%s.png'%self.generate_counter, 'PNG')
-				self.result_image.source = './temp/result%s.png'%self.generate_counter
-
 			self.generate_counter += 1
+
+		if not result is None:
+			result.save('./temp/result%s.png'%self.generate_counter, 'PNG')
+
+			self.result_image.nocache = True
+			self.result_image.source = './temp/result%s.png'%self.generate_counter
+
+
 		else:
 		   
 		   msg = MsgBox(text='You should set the algorithm and\n the parameters and load a secret image')
 		   msg.open()
 
+	def shade_button_press(self,instance):
+		print instance.shade_path 
+		
+		print instance.background_color	
+		if instance.background_color != [1,0,0,1]:
+			instance.store_bgcolor = instance.background_color
+			instance.background_color = (1,0,0,1)
+
+			wimage = Factory.Image(
+					source=instance.shade_path, 
+					allow_stretch=True,
+					size_hint=(0.8,0.9),
+					nocache=True
+				)
+					
+
+			wimage.pos = (0,0)
+
+			self.shades.add_widget(wimage)
+
+		else:
+			instance.background_color = instance.store_bgcolor
+
+			for wimage in self.shades.children:
+				if wimage.source == instance.shade_path:
+					self.shades.remove_widget(wimage)
 
     	def dismiss_popup(self):
         	self._popup.dismiss()
@@ -173,6 +204,9 @@ class MainWidget(BoxLayout):
         	#with open(os.path.join(path, filename[0])) as stream:
             	#	self.id_loadImageText.text = stream.read()
         	self.dismiss_popup()
+
+class ShadeButton(Button):
+	shade_path = ""
 
 class ShadeLayout(FloatLayout):
 	currentImage = None
@@ -237,7 +271,6 @@ class Shade(WImage):
 		  		self.pos = (newx, newy)
 
 		
-			print self.pos
 
         def on_touch_up(self, touch):
 		self.moving = False
@@ -247,20 +280,14 @@ class Shade(WImage):
 		(cx, cy) = self.pos
 		(w,h) = self.size
 
-		print (px,py)
-		print self.pos
-		print self.size
 
 		if px > cx and py > cy and \
 		   px < cx + w and py < cy + h:
 			self.moving = True
-			print 'moving'
-		print '-----------'
 
 	def process_pos(self, pos):
 		(x,y) = pos
 		(px,py) = self.parent.pos
-		print 'Parent pos: %s,%s'%(px,py)
 		return (x-px, y-py)
 
 class MainApp(App):
@@ -272,3 +299,5 @@ if __name__ == '__main__':
 
 Factory.register('Shade', cls=Shade)
 Factory.register('ShadeLayout', cls=ShadeLayout)
+Factory.register('ShadeButton', cls=ShadeButton)
+

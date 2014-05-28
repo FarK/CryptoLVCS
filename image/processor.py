@@ -29,10 +29,8 @@ def get_image(data, w, h, image=None, alpha = False):
 		       if p:
 			   image.putpixel((cf, rf+srf), (0, 0, 0))
  
-		       	   #print "X (%s,%s)"%(rf+srf, cf) 
 		       else:
 
-		       	   #print "  (%s,%s)"%(rf+srf, cf) 
 			   if alpha:
 			   	image.putpixel((cf, rf+srf), (0, 0, 0, 0))
 			   else:
@@ -88,8 +86,6 @@ def addtext(text, image, cols, font_size = 16, rows = None, alpha = False):
         (w, h) = image.size
 
         #canvas resizing if it is neccesary
-        #print (w, h)
-        #print (wn, hn)
         if w < wn or h < hn:
             img = createimage(rows, cols, font_size)
             img.paste(image, (0, 0, w, h))

@@ -36,7 +36,6 @@ def create_L(b):
     for r in b[0:]:
         rc = 0
         rnew = []
-        #print r
         for c in r:
             letter = random.choice(upper_case[rc]) \
                          if b[ri][rc] else r0[rc]
@@ -51,10 +50,16 @@ def create_L(b):
     return result
 
 def get_basis_matrix(k, n, m, fake=True):
-    if k == 2 and n == 3:
+    if k == 2 and n == 3 and fake:
+        b0 = get_B_23_fake()[0]
+        b1 = get_B_23_fake()[1]
+	m = 2
+
+    elif k == 2 and n == 3 and not fake:
+	print 'ok'
         b0 = get_B_23()[0]
         b1 = get_B_23()[1]
-	m = 2
+	m = 4
 
     elif k == 2 and n == 2 and not fake:
         b0 = get_B_22()[0]
@@ -91,7 +96,6 @@ def DVCS(image, channel=0, thresold=125, k=2, n=3, m=2):
 
     for p in sdata:
 	v = int_permutation(m)
-	print v
 	lc = b1 if p[channel] < thresold else b0
 
 	for i in range(0, n):
@@ -137,25 +141,8 @@ def LVCS_DVCS(image, channel=0, thresold=125, k=2, n=3, m=6):
     return result
 
 def LVCS_PVCS(image, channel=0, thresold=125, k=2, n=3, m=6):
-    if k == 2 and n == 3:
-        b0 = get_B_23()[0]
-        b1 = get_B_23()[1]
 
-    if k == 2 and n == 2:
-        b0 = get_B_22()[0]
-        b1 = get_B_22()[1]
-
-    if k == 3 and n == 3 and m == 6:
-        b0 = get_B_33()[0]
-        b1 = get_B_33()[1]
-
-    if k == 3 and n == 3 and m == 9:
-        b0 = get_B_33_m9()[0]
-        b1 = get_B_33_m9()[1]
-
-    elif k == 3 and n > 2:
-        b0 = get_B_3n(n)[0]
-        b1 = get_B_3n(n)[1]
+    (b0, b1, m) = get_basis_matrix(k, n, m, fake=True)  
 
     sdata = image.getdata()
 

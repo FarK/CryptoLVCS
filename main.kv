@@ -6,6 +6,8 @@
 	parameters: id_parameters
 	shades: id_shades
 	result_image: id_result
+	bar: id_bar
+
 	canvas:
 		Color:
 			rgba: 1,1,1,1
@@ -16,8 +18,8 @@
 	BoxLayout:
 		orientation: 'vertical'
 
-		StackLayout:
-			orientation: 'lr-tb'
+		BoxLayout:
+			orientation: 'horizontal'
 			size_hint: 1, 0.05
 
 			Spinner:
@@ -38,30 +40,31 @@
 				text: "Load secret"
 				on_press: root.show_load()
 
-
-		Image:
-			id: id_secret_image
-			size_hint:1,0.2
-		Button:
-			size_hint: 1, 0.05
-			text: "Generate"
-			on_press: root.generateShadows()
-		
 		BoxLayout:
-			
-			orientation: 'vertical'
+			orientation:'horizontal'
 			size_hint:1,0.2
 
-			Label:
-				text: "All shadows result:"
-				size_hint:1,0.2
+			Image:
+				id: id_secret_image
+				size_hint:1,1
+			Button:
+				size_hint: 0.5, 0.5
+				text: "Generate > "
+				on_press: root.generateShadows()
+			
 			Image:
 				id: id_result
-				size_hint:1,0.8		
+				size_hint:1,1	
+	
+
+		StackLayout:
+			id: id_bar
+			orientation:'lr-tb'
+			size_hint:1,0.05
 
 		ShadeLayout:
 			id: id_shades
-			size_hint:1,0.4
+			size_hint:1,0.7
 	
 
 		
