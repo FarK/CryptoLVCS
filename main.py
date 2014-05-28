@@ -37,7 +37,7 @@ class MainWidget(BoxLayout):
 	bar = ObjectProperty(None)
 
 	valid_algorithms = ['DVCS','LVCS-DVCS','LVCS-PVCS']
-	valid_parameters = {'(2,2)':(2,2,None),'(2,3)':(2,3,None),'(3,3)':(3,3,6)}
+	valid_parameters = {'(2,2)':(2,2,None),'(2,3)':(2,3,None),'(3,3)':(3,3,4),'(3,4)':(3,4,6)}
 	
 	generate_counter = 0
 
@@ -61,6 +61,7 @@ class MainWidget(BoxLayout):
 		   n = self.valid_parameters[self.parameters.text][1]
 		   m = self.valid_parameters[self.parameters.text][2]
 
+		   result = None
 		   if self.algorithm.text == self.valid_algorithms[1] or \
                       self.algorithm.text == self.valid_algorithms[2]:
 
@@ -150,11 +151,11 @@ class MainWidget(BoxLayout):
 
 			self.generate_counter += 1
 
-		if not result is None:
-			result.save('./temp/result%s.png'%self.generate_counter, 'PNG')
+		   if not result is None:
+		       result.save('./temp/result%s.png'%self.generate_counter, 'PNG')
 
-			self.result_image.nocache = True
-			self.result_image.source = './temp/result%s.png'%self.generate_counter
+		       self.result_image.nocache = True
+	               self.result_image.source = './temp/result%s.png'%self.generate_counter
 
 
 		else:

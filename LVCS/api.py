@@ -71,13 +71,19 @@ def get_basis_matrix(k, n, m, fake=True):
         b1 = get_B_22_fake()[1]
         m = 2
 
-    elif k == 3 and n == 3 and m == 6:
+    elif k == 3 and n == 3 and m == 4:
         b0 = get_B_33()[0]
         b1 = get_B_33()[1]
 
     elif k == 3 and n == 3 and m == 9:
         b0 = get_B_33_m9()[0]
         b1 = get_B_33_m9()[1]
+
+
+    elif k == 3 and n == 4:
+	b0 = get_B_34()[0]
+        b1 = get_B_34()[1]
+
 
     elif k == 3 and n > 2:
         b0 = get_B_3n(n)[0]

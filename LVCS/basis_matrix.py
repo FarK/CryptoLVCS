@@ -125,6 +125,16 @@ def get_B_22_fake():
 
 def get_B_33():
     return (
+	[[
+		(True, True, False, False),
+		(True, False, True, False),
+		(False, True, True, False)
+	],[
+		(True, False, False, True),
+		(False, True, False, True),
+		(False, False, True, True)
+	]])
+'''
 [[
      (True, False, False, True, False, True) ,
      (True, False, True, True, False, False) ,
@@ -134,8 +144,21 @@ def get_B_33():
      (False, False, True, False, True, True) ,
      (True, False, False, False, True, True) ,
 ]]
+'''
 
-            )
+def get_B_34():
+    return (
+	[[
+		(True, True, True, False, False, False),
+		(True, True, False, True, False, False),
+		(True, False, True, True, False, False),
+		(False, True, True, True, False, False),
+	],[
+		(True, False, False, False, True, True),
+		(False, True, False, False, True, True),
+		(False, False, True, False, True, True),
+		(False, False, False, True, True, True)
+	]])
 
 #difference factor 2
 def get_B_33_m9():
