@@ -5,6 +5,7 @@
 *.jpg
 *.png
 *.bmp
+LVCS/resources
 
 #FONTS
 *.ttf
@@ -16,4 +17,4 @@
 voure.fon
 
 #Vim files
-*.swp
+*.sw?
