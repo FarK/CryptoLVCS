@@ -46,6 +46,8 @@ class MainWidget(BoxLayout):
 		       self.algorithm.text in self.valid_algorithms
 	 
 	def clean_dir(self,folder):
+		if not os.path.isdir(folder):
+			os.makedirs(folder)
 
 		for the_file in os.listdir(folder):
     			file_path = os.path.join(folder, the_file)

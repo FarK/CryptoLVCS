@@ -1,0 +1,70 @@
+\documentclass[a4paper,12pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+\usepackage{amsmath}
+\usepackage{import}
+\usepackage{graphicx}
+\usepackage{subcaption}
+\usepackage[spanish]{varioref}
+\usepackage{xparse}
+\usepackage{appendix}
+\usepackage{color}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true,
+	linkcolor=blue,
+	citecolor=blue,
+	filecolor=blue,
+	urlcolor=blue,
+	pdftitle= Esquema de criptografía visual basado en letras,
+	pdfauthor= David Solís Martín - Carlos Falgueras García,
+	pdfsubject= Esquema de criptografía visual basado en letras,
+	pdfkeywords= VCS  DVCS  PVCS  LVCS
+}
+
+\def\Title{Esquema de criptografía visual basado en letras}
+\def\Authors{David Solís Martín \\ Carlos Falgueras García}
+%\def\Tutor{}
+
+%Referencia capítulos, secciones, etc; con número y título
+\newcommand{\refcont}[1]{\ref{#1}-\nameref{#1}}
+\newcommand{\reffig}[1]{Figura \ref{#1}}
+
+%Espaciado entre párrafos
+\newlength{\parseparation}
+\setlength{\parseparation}{1.5em}  %Distancia entre párrafos por defecto
+\newcommand{\parset}[1]{\setlength{\parskip}{#1}}  %Comando para setear distancia
+\newcommand{\parreset}{\setlength{\parskip}{\parseparation}}  %Comando para dejarla como estaba
+\parreset
+
+%%%%%%%%%%
+% MACROS %
+%%%%%%%%%%
+\def\B0{$B_0$}
+\def\B1{$B_1$}
+
+\begin{document}
+\subimport{Title/}{Title}
+
+\tableofcontents
+\newpage
+
+%Imports de las partes
+%\subimport{Introduccion/}{Introduccion}
+%\newpage
+
+%Bibliografía
+\section{Bibliografía}
+\nocite{*}
+\bibliographystyle{plain}
+\bibliography{bibliografia.bib}
+
+%Anexos
+\newpage
+\section{Anexos}
+\subsection{Repositorio}
+Esta es la dirección del repositorio público Git que contiene tanto el código
+del programa, como el código \LaTeX\ de la documentación.
+
+\textbf{Dirección del repositorio:} \url{https://github.com/FarK/CryptoLVCS}
+
+\end{document}

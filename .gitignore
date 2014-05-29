@@ -2,9 +2,10 @@
 *.pyc
 
 #IMAGES
-*.jpg
-*.png
-*.bmp
+Program/**/*.jpg
+Program/**/*.png
+Program/**/*.bmp
+Program/LVCS/resources
 
 #FONTS
 *.ttf
@@ -16,4 +17,13 @@
 voure.fon
 
 #Vim files
-*.swp
+*.sw?
+
+#LaTeX
+*.aux
+*.out
+*.log
+*.bbl
+*.blg
+*.toc
+*.latexmain
