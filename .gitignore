@@ -5,7 +5,7 @@
 *.jpg
 *.png
 *.bmp
-LVCS/resources
+Program/LVCS/resources
 
 #FONTS
 *.ttf
