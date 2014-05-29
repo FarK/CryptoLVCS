@@ -43,8 +43,8 @@ distorsionar el aspecto de la imagen original.
 	\KwIn{\\Una imagen I secreta de $W\times H$\\Las matrices base $B_0$ y $B_1$}
 	\KwResult{\\N sombras $S_i$ de tamaño $m\times W\times H$}
 
-	\For{all pixel in I}{
-		\eIf{I == blanco}{
+	\For{all pixel $px$ in I}{
+		\eIf{$px$ == blanco}{
 			1. Seleccionar una permutación $B^p_0$ aleatoria de $B_0$\;
 
 			2. Añadir la columna i-ésima de $B^p_0$ ($m$ píxeles) al
@@ -101,8 +101,8 @@ siendo negro o de que un píxel negro termine siendo blanco. En la figura
 	\KwIn{\\Una imagen I secreta de $W\times H$\\Las matrices base $B_0$ y $B_1$}
 	\KwResult{\\N sombras $S_i$ de tamaño $W\times H$}
 
-	\For{all pixel in I}{
-		\eIf{I == blanco}{
+	\For{all pixel $px$ in I}{
+		\eIf{$px$ == blanco}{
 			1. Seleccionar una columna $C_j$ aleatoria de $B_0$ (con
 			$j\in[0,m-1]$)\;
 
@@ -150,3 +150,58 @@ siendo negro o de que un píxel negro termine siendo blanco. En la figura
 	\caption{Ejemplos de cifrado con PVCS}
 	\label{fig:ejemplosPVCS}
 \end{figure}
+\subsection{Matrices base}
+\label{sec:matrices_base}
+Como hemos comentado anteriormente, las matrices base son unas matrices binarias
+que determinan el comportamiento de los algoritmos VCS. Éstas matrices tienen
+que tener dimensión $N\times m$, dónde $N$ es el número de sombras en un esquema
+$(K,N)$ y $m$ es el \textsl{factor expansión}, que determinará por cuantos
+píxeles se representará un píxel de la imagen original en los superpíxeles de la
+imagen resultado, en el caso del algoritmo DVCS.
+
+Además de esto, han de cumplir dos condiciones:
+\begin{enumerate}
+	\item \textbf{Condición de contraste}[\ref{eq:cond_contraste}] \textsl{El
+		número de píxeles negros de un superpíxel negro es mayor que el
+		de un superpíxel blanco}. Esto asegura que en la imagen
+		resultante se puedan distinguir los superpíxeles negros de los
+		blancos.
+	\item \textbf{Condición de seguridad}[\ref{eq:cond_seguridad}]: \textsl{El
+		número de píxeles negros es el mismo para cualquier superpixel
+		resultante de la superposición de $K-1$ sombras o menos}. Esto
+		asegura que si se tienen menos de $K$ sombras, no se obtiene
+		ninguna información sobre el secreto.
+\end{enumerate}
+
+Si definimos la operación $OR(B|r)$ como el vector resultante de realizar la
+operación \textsl{or} por columnas, a $r$ filas cualesquiera de la matriz $B$. Y
+definimos la operación $H(\cdot)$ como la distancia de hamming (el número de 1s
+del vector). Podemos definir las restricciones anteriores mediante las
+siguientes ecuaciones:
+
+\begin{align}
+	&\begin{cases}
+		H(OR(B_0|r)) \ge (m-l) \\
+		H(OR(B_0|r)) \le (m-h) 
+	\end{cases}
+	\text{, si } r = K
+	\label{eq:cond_contraste}
+	\\\nonumber
+	&\text{Con: } 0 \le l < h \le m
+\end{align}
+
+\begin{equation}
+	H(OR(B_0|r)) = H(OR(B_1|r)) \: \text{, si } r < K
+	\label{eq:cond_seguridad}
+\end{equation}
+
+Las constantes $l$ y $m$ determinan respectivamente:
+\begin{itemize}
+	\item $l$: Número máximo de píxeles blancos en un superpíxel negro
+	\item $m$: Número mínimo de píxeles blancos en un superpíxel blanco
+\end{itemize}
+Por lo que variando las mismas podemos ajustar la calidad da la imagen
+resultante.
+
+Como veremos en la sección \refcont{sec:impl.matrices_base}, la generación de
+estas matrices es un problema muy complejo (vease \cite{generacion_matrices}).
