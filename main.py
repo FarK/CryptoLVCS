@@ -79,12 +79,13 @@ class MainWidget(BoxLayout):
 			pos = (0,0)
 			result = None
 			self.clean_dir('./temp')
-			for i in range(0,len(shades_info)):
+			num_shades = len(shades_info)
+			for i in range(0, num_shades):
 
 				path = './temp/shade%s%s.png'%(self.generate_counter,i)
 
 				#add buton in shades bar
-				wb = float(1)/len(shades_info)
+				wb = float(1)/num_shades
 				wbutton = Factory.Button(
 						text='Shade %s'%(i+1),
 						size_hint=(wb,1)
@@ -94,18 +95,20 @@ class MainWidget(BoxLayout):
 				self.bar.add_widget(wbutton)
 	
 				#get shades
-				shade_info = shades_info[i]
+				shade_info = shades_info[0]
 				shade = addtext(shade_info, None, w, rows = h, alpha=True)
 				 
 				#shave images
 				shade.save(path, 'PNG')
-				
+				del shade
+	
 				if result is None:
 					result = addtext(shade_info, None, w, rows=h, alpha=False)
 				else:
 					result = overlaping(addtext(shade_info, None, w, rows=h, alpha=False),
 						            result)
-		
+				
+				del shades_info[0]		
 			self.generate_counter += 1
 
 		   elif self.algorithm.text == self.valid_algorithms[0]:
@@ -122,11 +125,12 @@ class MainWidget(BoxLayout):
 			pos = (0,0)
 			result = None
 			self.clean_dir('./temp')
-			for i in range(0,len(shades_info)):	
+			num_shades = len(shades_info)
+			for i in range(0,num_shades):	
 				path = './temp/shade%s%s.png'%(self.generate_counter,i)
 				
 				#add buton in shades bar
-				wb = float(1)/len(shades_info)
+				wb = float(1)/num_shades
 				wbutton = Factory.ShadeButton(
 						text='Shade %s'%(i+1),
 						size_hint=(wb,1),
@@ -136,18 +140,20 @@ class MainWidget(BoxLayout):
 				self.bar.add_widget(wbutton)
 				
 				#get shades
-				shade_info = shades_info[i]
+				shade_info = shades_info[0]
 				shade = get_image(shade_info, image = None, w = w, h = h, alpha=True)
 				 
 				#shave images
 				shade.save(path, 'PNG')
-				
+			        del shade
+			
 				if result is None:
 					result = get_image(shade_info, image=None, w=w, h=h, alpha=False)
 				else:
 					result = overlaping(get_image(shade_info, 
 							image=None, w=w, h=h, alpha=False),
 						            result)
+				del shades_info[0]
 
 			self.generate_counter += 1
 
