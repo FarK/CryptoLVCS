@@ -9,6 +9,7 @@
 \usepackage{xparse}
 \usepackage{appendix}
 \usepackage{color}
+\usepackage[spanish,linesnumbered]{algorithm2e}
 \usepackage{hyperref}
 \hypersetup{colorlinks=true,
 	linkcolor=blue,
@@ -35,6 +36,10 @@
 \newcommand{\parset}[1]{\setlength{\parskip}{#1}}  %Comando para setear distancia
 \newcommand{\parreset}{\setlength{\parskip}{\parseparation}}  %Comando para dejarla como estaba
 \parreset
+
+%Configuración algoritmos pseudocódigo
+\RestyleAlgo{boxed}
+
 
 %%%%%%%%%%
 % MACROS %
